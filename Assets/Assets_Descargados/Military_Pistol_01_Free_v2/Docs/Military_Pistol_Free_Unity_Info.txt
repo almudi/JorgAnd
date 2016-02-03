@@ -1,0 +1,38 @@
+Military_Pistol_01_Free
+A Subset of “Military_Pistol_01”
+
+Check out the video here:
+http://youtu.be/Z0OSpiqcS2g
+
+
+6 Military Pistol Animations; featuring AAA game-ready military style motions with a pistol.
+
+Includes a relaxed idle, a walk, walking aim, jog aim, crouch idle and standing fidget.
+
+All animations are .fbx format, standard fbx bone names.
+Locomotions are included as traveling motions.
+1911_Pistol_01 - A matching fully textured Pistol has been included as a separate asset .fbx file. Parenting or constraining it with zero offset to the “RH_WP” bone in the right hand will place and animate it correctly. It has been parented into the hierarchy in the default setup scene.
+
+UNITY 3D NOTES:
+
+The “Default_Setup” scene has the Rifle (or Pistol) parented to the “RH_WP” bone in the Hierarchy with zero offset. (See image 01) All animations have been simply added to the Animator, so any motion you right-click - “Set as Default” will play/preview in the Scene viewport with the weapon in hand.
+
+The “Default_Setup” has been included as a convenience to initially view/preview the motions with the weapon. The Scene, Controller, and Hierarchy can be altered or deleted as you see fit for your use.
+
+“MotusMan_v2” is the main Avatar and currently set to “Generic”. All Animation files have been set to use its Avatar. After initially opening the scene, files in the “Animation” folder will likely not be visible in the Preview viewport. (See images 02, 03) Dragging “MotusMan_v2” into the Preview will make them visible. The weapon will not be visible in the Preview, only in the Scene viewport. (See above description) Specifically looping animations have been set to “Loop”.
+
+Of course, all parameters can be altered and set up to implement the animations as you wish. If the Rig is set to “Humanoid”, all “Muscle” assignments should automatically be correct, except for “Chest”. “MotusMan_v2” has three spine bones, and the third, “Spine2”, is likely the better choice versus the auto-choice “Spine1”.
+
+Please refer to the Unity documentation or contact us with any other questions.
+mocap@motusdigital.com
+
+ANIMATION LIST
+MIL2_M3_W2_Stand_Relaxed_Idle
+MIL2_M3_W2_Walk_F_Loop
+MIL2_M3_W2_Walk_Aim_F_Loop
+MIL2_M3_W2_Jog_Aim_F_Loop
+MIL2_M3_W2_Crouch_Idle
+MIL2_M3_W2_Stand_Relaxed_Fgt_v1
+
+Provided Motus Man character is copyright © Motus Digital, LLC
+
