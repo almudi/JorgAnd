@@ -7,36 +7,32 @@ public class PlayerController : MonoBehaviour {
 	public float moveSpeed = 5;
 	public GameObject primaryWeapon;
 	public GameObject secondaryWeapon;
+	public Transform weaponSpawn;
 
 	Rigidbody rbody;
-	int floorMask;
 	float camRayLength = 100f;
 	Animator playerAnimator;
 	float attackTimer = 0f;
 	float characterSpeed;
 	bool isCrouching = false;
 	Weapon myWeapon;
-	string weaponLocation = "/Player/Beta:Hips/Beta:Spine/Beta:Spine1/Beta:Spine2/" +
-	                        "Beta:RightShoulder/Beta:RightArm/Beta:RightForeArm/Beta:RightHand/Weapon";
-	Transform weaponTransform;
 	GameObject equipedWeapon;
 	bool isAiming = false;
 
 
 
 	void Start()
-	{
-		weaponTransform = transform.Find(weaponLocation);
-		myWeapon = Weapon.Pistol;
-		equipedWeapon = Instantiate (secondaryWeapon) as GameObject;
-		SetWeaponPosition (secondaryWeapon,weaponTransform);
+	{	
+		myWeapon = Weapon.Axe;
+		equipedWeapon = Instantiate (primaryWeapon, Vector3.zero, Quaternion.identity) as GameObject;
+		equipedWeapon.SetActive (true);
+		setWeaponPosition (primaryWeapon.transform);
 
 		characterSpeed = moveSpeed;
 		playerAnimator = GetComponent<Animator> ();
 		rbody = GetComponent<Rigidbody> ();
-		floorMask = LayerMask.GetMask ("Floor");
 	}
-
+		
 
 	void Update()
 	{
@@ -48,7 +44,7 @@ public class PlayerController : MonoBehaviour {
 		Attack(myWeapon);
 		BlockAttack (myWeapon);
 		Aim (myWeapon);
-		SetWeapon ();
+		SetWeapon (primaryWeapon, secondaryWeapon);
 	}
 
 
@@ -103,7 +99,7 @@ public class PlayerController : MonoBehaviour {
 		
 	void Aim(Weapon weapon)
 	{
-		if(weapon.Equals(Weapon.Pistol)){
+		if (weapon.Equals (Weapon.Pistol)) {
 			playerAnimator.SetLayerWeight (2, 1f);
 			if (Input.GetMouseButton (1)) {
 				isAiming = true;
@@ -114,8 +110,10 @@ public class PlayerController : MonoBehaviour {
 				playerAnimator.SetBool ("isAiming", isAiming);
 				playerAnimator.SetFloat ("axisSpeed", 1f);
 			}
-		}else
+		} else {
 			playerAnimator.SetLayerWeight (2, 0f);
+			isAiming = false;
+		}
 	}
 
 	void BlockAttack(Weapon weapon)
@@ -148,6 +146,14 @@ public class PlayerController : MonoBehaviour {
 			}
 			attackTimer -= Time.deltaTime;
 		}
+
+		if (weapon.Equals (Weapon.Pistol) && isAiming && Input.GetMouseButtonDown (0)) {
+			Shot a;
+			a = secondaryWeapon.GetComponent<Shot> () as Shot;
+			if (a != null) {
+				a.pistolShot ();
+			}
+		}
 	}
 
 
@@ -168,32 +174,33 @@ public class PlayerController : MonoBehaviour {
 
 
 	//Cambio entre arma primaria y secundaria
-	void SetWeapon()
-	{
-		if(Input.GetKeyDown("1") ){
+	void SetWeapon(GameObject primary, GameObject secondary)
+	{	
+		if(Input.GetKeyDown("1")){			//Primary Weapon
 			myWeapon = Weapon.Axe;
-			Destroy(equipedWeapon);
-			equipedWeapon = Instantiate (primaryWeapon, weaponTransform.position, primaryWeapon.transform.rotation) as GameObject;
-			SetWeaponPosition (primaryWeapon, weaponTransform);
+			Destroy (equipedWeapon);
+			equipedWeapon = Instantiate (primary, weaponSpawn.position, weaponSpawn.rotation) as GameObject;
+			setWeaponPosition(primary.transform);
 		}
 
-		if(Input.GetKeyDown("2")){
+		if(Input.GetKeyDown("2")){			//Secondary Weapon
 			myWeapon = Weapon.Pistol;
-			//Destruimos el arma anterior si la hay, e invocamos la nueva
-			Destroy(equipedWeapon);
-			equipedWeapon = Instantiate (secondaryWeapon) as GameObject;
-			SetWeaponPosition (secondaryWeapon, weaponTransform);
+			Destroy (equipedWeapon);
+			equipedWeapon = Instantiate (secondary, weaponSpawn.position, weaponSpawn.rotation) as GameObject; 
+			setWeaponPosition (secondary.transform);
 		}
-	}		
+	
+	}	
 
-	//Coloca el arma en la posicion correspondiente del personaje
-	void SetWeaponPosition(GameObject weapon,Transform position)
+
+	void setWeaponPosition(Transform location)
 	{
-		equipedWeapon.transform.SetParent (weaponTransform); //El arma equipada es hija de la posición del arma de nuestro personaje
-		//Posicion y Rotacion del arma equipada
-		equipedWeapon.transform.position = weaponTransform.position;
-		equipedWeapon.transform.rotation = weaponTransform.rotation;
-		equipedWeapon.transform.localPosition = weapon.transform.position;
-		equipedWeapon.transform.localRotation = weapon.transform.rotation;
+		equipedWeapon.transform.rotation = weaponSpawn.rotation;
+		equipedWeapon.transform.position = weaponSpawn.position;
+		equipedWeapon.transform.SetParent (weaponSpawn);
+		equipedWeapon.transform.localRotation = location.rotation;
+		equipedWeapon.transform.localPosition = location.position;
 	}
 }
+		
+
