@@ -4,6 +4,7 @@ using System.Collections;
 public class Mover : MonoBehaviour {
 
 	public float moveSpeed;
+	public float lifeTime=5f;
 
 
 	void Awake(){
@@ -15,5 +16,9 @@ public class Mover : MonoBehaviour {
 		GameObject player = GameObject.FindWithTag("Player");
 
 		transform.Translate (new Vector3(0,1,0) * moveSpeed * Time.deltaTime);
+		if (lifeTime <= 0) {
+			Destroy (this.gameObject);
+		}
+		lifeTime -= Time.deltaTime;
 	}
 }

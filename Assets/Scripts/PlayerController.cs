@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject primaryWeapon;
 	public GameObject secondaryWeapon;
 	public Transform weaponSpawn;
+	public Shot shot;
 
 	Rigidbody rbody;
 	float camRayLength = 100f;
@@ -20,12 +21,16 @@ public class PlayerController : MonoBehaviour {
 	bool isAiming = false;
 	bool isBlocking = false;
 
-
+	void Awake ( ) {
+		equipedWeapon = Instantiate (primaryWeapon, Vector3.zero, Quaternion.identity) as GameObject;
+	}
 
 	void Start()
 	{	
+		
+
 		myWeapon = Weapon.Axe;
-		equipedWeapon = Instantiate (primaryWeapon, Vector3.zero, Quaternion.identity) as GameObject;
+
 		equipedWeapon.SetActive (true);
 		setWeaponPosition (primaryWeapon.transform);
 
@@ -47,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 		Aim (myWeapon);
 		SetWeapon (primaryWeapon, secondaryWeapon);
 	}
-
+		
 
 	//Movimiento del objecto a lo largo del plano
 	void Move(float h, float v)
@@ -108,8 +113,11 @@ public class PlayerController : MonoBehaviour {
 			if (Input.GetMouseButton (1)) {
 				isAiming = true;
 				playerAnimator.SetBool ("isAiming", isAiming);
+				if (Input.GetMouseButton (0)) {
+					shot.pistolShot ();
+				}
 			}
-			if (Input.GetMouseButtonUp (1)) {
+			if (Input.GetMouseButtonUp (1)||Input.GetKeyDown("1")) {
 				isAiming = false;
 				playerAnimator.SetBool ("isAiming", isAiming);
 				playerAnimator.SetFloat ("axisSpeed", 1f);
@@ -199,6 +207,10 @@ public class PlayerController : MonoBehaviour {
 			Destroy (equipedWeapon);
 			equipedWeapon = Instantiate (secondary, transform.TransformVector(weaponSpawn.position), weaponSpawn.rotation) as GameObject; 
 			setWeaponPosition (secondary.transform);
+
+			shot = equipedWeapon.GetComponent<Shot> ();
+			if (shot == null)
+				Time.timeScale = 0f;
 		}
 	
 	}	

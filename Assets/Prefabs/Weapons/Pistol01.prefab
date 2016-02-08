@@ -13,7 +13,7 @@ GameObject:
   - 95: {fileID: 9534800}
   - 114: {fileID: 11465704}
   m_Layer: 0
-  m_Name: pistol01
+  m_Name: Pistol01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

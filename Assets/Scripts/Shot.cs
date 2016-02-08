@@ -6,6 +6,7 @@ public class Shot : MonoBehaviour {
 	public GameObject bullet;
 	public ParticleSystem shotEffectPrefab;
 	public Transform bulletSpawn;
+	public float fireRate;
 
 	ParticleSystem particle;
 	void Awake()
@@ -15,14 +16,17 @@ public class Shot : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetMouseButtonDown(0))
-			pistolShot();
+		
 	}
 	public void pistolShot()
 	{
-		particle = Instantiate (shotEffectPrefab, bulletSpawn.position, bulletSpawn.rotation) as ParticleSystem;
-		particle.Play ();
-		Instantiate (bullet, bulletSpawn.position, bulletSpawn.rotation);
+		if (fireRate<=0) {
+			fireRate = 0.3f;
+			particle = Instantiate (shotEffectPrefab, bulletSpawn.position, bulletSpawn.rotation) as ParticleSystem;
+			particle.Play ();
+			Instantiate (bullet, bulletSpawn.position, bulletSpawn.rotation);
+		}
+		fireRate -= Time.deltaTime;
 		Debug.Log ("Shot");
 	}
 
@@ -30,5 +34,4 @@ public class Shot : MonoBehaviour {
 	{
 		return shotEffectPrefab;
 	}
-
 }
