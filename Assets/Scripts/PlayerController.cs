@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 	Weapon myWeapon;
 	GameObject equipedWeapon;
 	bool isAiming = false;
+	bool isBlocking = false;
 
 
 
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour {
 			float angle = Mathf.LerpAngle (transform.eulerAngles.y, desiredAngle, Time.deltaTime * 12);
 			Quaternion rotation = Quaternion.Euler (0, angle, 0);
 			rbody.MoveRotation (rotation);
+
 		}
 
 	}
@@ -93,9 +95,11 @@ public class PlayerController : MonoBehaviour {
 		} else {			//Si no se mueve con normalidad
 			moveSpeed = characterSpeed;
 			playerAnimator.SetFloat("axisSpeed",Mathf.Lerp(0, 1, hor + ver));	//Calcula un valor entre 0 y 1 apartir de los axis horizontal y vertical
+
 		}
 			
 	}
+
 		
 	void Aim(Weapon weapon)
 	{
@@ -118,16 +122,22 @@ public class PlayerController : MonoBehaviour {
 
 	void BlockAttack(Weapon weapon)
 	{
-		if(weapon.Equals(Weapon.Axe)){
+		if (weapon.Equals (Weapon.Axe)) {
 			
 			if (Input.GetMouseButton (1)) {
-				playerAnimator.SetBool ("isBlocking", true);
+				isBlocking = true;
+				playerAnimator.SetBool ("isBlocking", isBlocking);
 				playerAnimator.SetLayerWeight (1, 1f);
 			}
 			if (Input.GetMouseButtonUp (1)) {
-				playerAnimator.SetBool ("isBlocking", false);
+				isBlocking = false;
+				playerAnimator.SetBool ("isBlocking", isBlocking);
 				playerAnimator.SetLayerWeight (1, 0f);
 			}
+		} else {
+			isBlocking = false;
+			playerAnimator.SetBool ("isBlocking", isBlocking);
+			playerAnimator.SetLayerWeight (1, 0f);
 		}
 	}
 
@@ -151,7 +161,8 @@ public class PlayerController : MonoBehaviour {
 			Shot a;
 			a = secondaryWeapon.GetComponent<Shot> () as Shot;
 			if (a != null) {
-				a.pistolShot ();
+				//a.pistolShot ();
+				a.GetShot ().Play ();
 			}
 		}
 	}
@@ -186,7 +197,7 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetKeyDown("2")){			//Secondary Weapon
 			myWeapon = Weapon.Pistol;
 			Destroy (equipedWeapon);
-			equipedWeapon = Instantiate (secondary, weaponSpawn.position, weaponSpawn.rotation) as GameObject; 
+			equipedWeapon = Instantiate (secondary, transform.TransformVector(weaponSpawn.position), weaponSpawn.rotation) as GameObject; 
 			setWeaponPosition (secondary.transform);
 		}
 	
@@ -195,8 +206,6 @@ public class PlayerController : MonoBehaviour {
 
 	void setWeaponPosition(Transform location)
 	{
-		equipedWeapon.transform.rotation = weaponSpawn.rotation;
-		equipedWeapon.transform.position = weaponSpawn.position;
 		equipedWeapon.transform.SetParent (weaponSpawn);
 		equipedWeapon.transform.localRotation = location.rotation;
 		equipedWeapon.transform.localPosition = location.position;

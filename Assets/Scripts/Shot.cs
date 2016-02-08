@@ -3,35 +3,32 @@ using System.Collections;
 
 public class Shot : MonoBehaviour {
 
-	public ParticleSystem shot;
+	public GameObject bullet;
+	public ParticleSystem shotEffectPrefab;
+	public Transform bulletSpawn;
 
-	Transform bulletSpawn;
-	ParticleSystem shotEffect;
-
-	void Start()
+	ParticleSystem particle;
+	void Awake()
 	{
-		bulletSpawn = transform.GetChild (0);
-		shotEffect = shot.GetComponent<ParticleSystem> () as ParticleSystem;
-		if (shotEffect != null) {
-			Debug.Log ("ShotEffect no es nulo");
-		}
+		
 	}
 
 	void Update()
 	{
-
-		Debug.Log (shot.emission.enabled);
-		shot.Emit (1000);
-		if (!shot.isPlaying) {
-			shot.Simulate (0.0f, true, true);
-			shot.Play ();
-		}
-
-		if (shot.isPlaying)
-			shot.Stop();
+		if(Input.GetMouseButtonDown(0))
+			pistolShot();
 	}
-	public void pistolShot(){
-		Debug.Log ("Disparando");
-		shot.Play ();
+	public void pistolShot()
+	{
+		particle = Instantiate (shotEffectPrefab, bulletSpawn.position, bulletSpawn.rotation) as ParticleSystem;
+		particle.Play ();
+		Instantiate (bullet, bulletSpawn.position, bulletSpawn.rotation);
+		Debug.Log ("Shot");
 	}
+
+	public ParticleSystem GetShot()
+	{
+		return shotEffectPrefab;
+	}
+
 }
